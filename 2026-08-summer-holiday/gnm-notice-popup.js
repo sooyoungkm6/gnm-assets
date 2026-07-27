@@ -7,7 +7,7 @@
     img: 'https://cdn.jsdelivr.net/gh/sooyoungkm6/gnm-assets@main/2026-08-summer-holiday/notice-600.png',
     alt: '굿나잇몰 여름휴가 휴무 안내 8/5(수)-8/7(금)',
     start: '2026-07-28T00:00:00+09:00',
-    end: '2026-08-10T09:00:00+09:00',
+    end: '2026-08-10T23:59:59+09:00',
     link: ''  // 클릭 시 이동할 공지 URL (비우면 이동 없음)
   };
 
