@@ -10,7 +10,7 @@
     end: '2026-08-10T23:59:59+09:00',
     link: '',  // 클릭 시 이동할 공지 URL (비우면 이동 없음)
     banner: {
-      text: '🏖 여름휴가 휴무 8/5(수)–8/7(금) · 8/4(화) 15시 결제분까지 당일 출고 · 8/10(월) 정상재개',
+      html: '🏖 여름휴가 휴무 <b style="color:#FCB825">8/5(수)–8/7(금)</b> · 8/4(화) 15시 결제분까지 당일 출고 · <b style="color:#FCB825">8/10(월) 정상재개</b>',
       start: '2026-07-27T00:00:00+09:00',  // 배너는 네이버 전체공지와 동일하게 즉시 시작
       end: '2026-08-10T23:59:59+09:00'
     }
@@ -25,15 +25,15 @@
     if (document.getElementById(CONFIG.id + '-bar')) return;
     var bar = document.createElement('div');
     bar.id = CONFIG.id + '-bar';
-    bar.style.cssText = 'background:#FCB825;color:#1F1F1F;font-size:14px;font-weight:600;' +
+    bar.style.cssText = 'background:#1F1F1F;color:#FFFFFF;font-size:14px;font-weight:500;' +
       'padding:11px 40px 11px 14px;text-align:center;position:relative;line-height:1.45;' +
       'font-family:Pretendard,"Apple SD Gothic Neo",sans-serif;';
-    bar.textContent = CONFIG.banner.text;
+    bar.innerHTML = CONFIG.banner.html;
     var x = document.createElement('button');
     x.textContent = '×';
     x.setAttribute('aria-label', '공지 닫기');
     x.style.cssText = 'position:absolute;right:8px;top:50%;transform:translateY(-50%);' +
-      'border:0;background:none;font-size:20px;cursor:pointer;color:#1F1F1F;padding:4px 10px;';
+      'border:0;background:none;font-size:20px;cursor:pointer;color:#FFFFFF;padding:4px 10px;';
     x.onclick = function () {
       try { sessionStorage.setItem(CONFIG.id + '-bar', '1'); } catch (e) {}
       bar.remove();
