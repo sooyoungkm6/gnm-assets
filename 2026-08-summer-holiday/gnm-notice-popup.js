@@ -1,6 +1,6 @@
-/* gnm-notice-popup.js — 굿나잇몰 휴무 공지 팝업 (Cafe24 ScriptTags 주입용)
+/* gnm-notice-popup.js — 굿나잇몰 휴무 공지 (Cafe24 ScriptTags 주입용)
  * holiday-notice 스킬 산출물. CONFIG만 교체해 연휴마다 재사용.
- * 동작: 기간 내 메인 페이지에서 1회 노출, "오늘 하루 보지 않기" 지원, 기간 외 자동 무동작 */
+ * 동작: 메인=이미지 팝업 / 상품 상세=상단 배너 띠. 기간 외 자동 무동작 */
 (function () {
   var CONFIG = {
     id: 'gnm-popup-2026-08-summer',
@@ -8,10 +8,50 @@
     alt: '굿나잇몰 여름휴가 휴무 안내 8/5(수)-8/7(금)',
     start: '2026-07-28T00:00:00+09:00',
     end: '2026-08-10T23:59:59+09:00',
-    link: ''  // 클릭 시 이동할 공지 URL (비우면 이동 없음)
+    link: '',  // 클릭 시 이동할 공지 URL (비우면 이동 없음)
+    banner: {
+      text: '🏖 여름휴가 휴무 8/5(수)–8/7(금) · 8/4(화) 15시 결제분까지 당일 출고 · 8/10(월) 정상재개',
+      start: '2026-07-27T00:00:00+09:00',  // 배너는 네이버 전체공지와 동일하게 즉시 시작
+      end: '2026-08-10T23:59:59+09:00'
+    }
   };
 
   var now = new Date();
+
+  // ── 상품 상세: 상단 배너 띠 ──
+  function showBanner() {
+    if (now < new Date(CONFIG.banner.start) || now > new Date(CONFIG.banner.end)) return;
+    try { if (sessionStorage.getItem(CONFIG.id + '-bar')) return; } catch (e) {}
+    if (document.getElementById(CONFIG.id + '-bar')) return;
+    var bar = document.createElement('div');
+    bar.id = CONFIG.id + '-bar';
+    bar.style.cssText = 'background:#FCB825;color:#1F1F1F;font-size:14px;font-weight:600;' +
+      'padding:11px 40px 11px 14px;text-align:center;position:relative;line-height:1.45;' +
+      'font-family:Pretendard,"Apple SD Gothic Neo",sans-serif;';
+    bar.textContent = CONFIG.banner.text;
+    var x = document.createElement('button');
+    x.textContent = '×';
+    x.setAttribute('aria-label', '공지 닫기');
+    x.style.cssText = 'position:absolute;right:8px;top:50%;transform:translateY(-50%);' +
+      'border:0;background:none;font-size:20px;cursor:pointer;color:#1F1F1F;padding:4px 10px;';
+    x.onclick = function () {
+      try { sessionStorage.setItem(CONFIG.id + '-bar', '1'); } catch (e) {}
+      bar.remove();
+    };
+    bar.appendChild(x);
+    document.body.insertBefore(bar, document.body.firstChild);
+  }
+
+  var isProduct = location.pathname.indexOf('/product/') === 0 ||
+                  location.pathname.indexOf('/surl/') === 0;
+  if (isProduct) {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', showBanner);
+    } else { showBanner(); }
+    return;
+  }
+
+  // ── 메인: 이미지 팝업 ──
   if (now < new Date(CONFIG.start) || now > new Date(CONFIG.end)) return;
   try {
     if (localStorage.getItem(CONFIG.id + '-hide') === new Date().toDateString()) return;
